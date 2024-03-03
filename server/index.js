@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const pg = require('pg');
+const PORT = 3000;
 
-const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/acme_nots_db')
+const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/acme_users_db')
 //const PORT = process.env.PORT || 3000;
 
 
@@ -24,9 +25,11 @@ const init = async() => {
 
     const SQL =`
     DROP TABLE IF EXISTS notes;
-    CREATE TABLE notes(
-      id SERIAL PRIMARY KEY,
-      txt VARCHAR(255),
+    CREATE TABLE Users (
+        Email VARCHAR(255) PRIMARY KEY NOT NULL,
+        Password VARCHAR(255) NOT NULL,
+        
+    );
      starred BOOLEAN DEFAULT FALSE
     );
     INSERT INTO notes(txt, starred) VALUES('learn express', false);
@@ -56,7 +59,7 @@ app.get('/api/products', (req, res) => {
 // View details for a specific product
 app.get('/api/products/:id', (req, res, next) => {
     const { id } = req.params;
-    const product = products.find(p => p.id === id);
+    const product = product.find(p => p.id === id);
     if (product) {
         res.json(product);
     } else {
@@ -88,9 +91,9 @@ app.post('/api/login', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+//app.listen(PORT, () => {
+   // console.log(`Server is running on http://localhost:${PORT}`);
+//});
 
 
 // Middleware to authenticate user
@@ -117,6 +120,45 @@ app.get('/api/notes', async (req, res, next) => {
       next(ex)
     }
   })
+  //  // Mock database
+const users = [
+    { id: 1, email: 'john@example.com', password: 'password1', admin: false },
+    { id: 2, email: 'jane@example.com', password: 'password2', admin: true },
+    { id: 3, email: 'bob@example.com', password: 'password3', admin: true }
+  ];
+  
+  // Routes
+  app.get('/users', async (req, res) => {
+    try {
+        const SQL = `
+          SELECT * from notes;
+        `
+        const response = await client.query(SQL)
+        res.send(response.rows)
+      } catch (ex) {
+        next(ex)
+      }
+  });
+  
+  app.get('/admin/users', (req, res) => {
+    const adminUsers = users.filter(user => user.admin);
+    res.json(adminUsers);
+  });
+  
+  app.get('/users/:email', (req, res) => {
+    const userEmail = req.params.email;
+    const user = users.find(user => user.email === userEmail);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).send('User not found');
+    }
+  });
+  
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });    //
 
 // Add product to cart
 app.post('/api/cart/add', authenticateUser, (req, res) => {
