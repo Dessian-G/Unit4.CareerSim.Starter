@@ -23,18 +23,25 @@ const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/a
 const init = async() => {
     await client.connect();
 
-    const SQL =`
-    DROP TABLE IF EXISTS notes;
-    CREATE TABLE Users (
-        Email VARCHAR(255) PRIMARY KEY NOT NULL,
-        Password VARCHAR(255) NOT NULL,
-        
+    const SQL = `
+    DROP TABLE IF EXISTS favorites;
+    DROP TABLE IF EXISTS users;
+    DROP TABLE IF EXISTS products;
+    CREATE TABLE users(
+      id UUID PRIMARY KEY,
+      username VARCHAR(20) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL
     );
-     starred BOOLEAN DEFAULT FALSE
+    CREATE TABLE products(
+      id UUID PRIMARY KEY,
+      name VARCHAR(20)
     );
-    INSERT INTO notes(txt, starred) VALUES('learn express', false);
-    INSERT INTO notes(txt, starred) VALUES('write SQL queries', true);
-   INSERT INTO notes(txt) VALUES('create routes');
+    CREATE TABLE favorites(
+      id UUID PRIMARY KEY,
+      user_id UUID REFERENCES users(id) NOT NULL,
+      product_id UUID REFERENCES products(id) NOT NULL,
+      CONSTRAINT unique_user_id_and_product_id UNIQUE (user_id, product_id)
+    );
   `;
 
     
