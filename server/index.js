@@ -1,28 +1,43 @@
 const express = require('express');
 const app = express();
+//const UUID = require('uuid');
 const path = require('path');
 const pg = require('pg');
-const PORT = 3000;
+//const PORT = 8080;
+
 
 const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/acme_users_db')
-//const PORT = process.env.PORT || 3000;
+//const PORT = process.env.PORT || 3001;
 
-
+const isLoggedIn = async(req, res, next)=> {
+  try {
+    req.user = await findUserByToken(req.headers.authorization);
+    next();
+  }
+  catch(ex){
+    next(ex);
+  }
+};
 
 
 // Dummy database to store products, users, and carts
 //let products = [
-   // { id: uuidv4(), name: 'Product 1', description: 'Description of Product 1', price: 10 },
-   // { id: uuidv4(), name: 'Product 2', description: 'Description of Product 2', price: 20 },
-    // Add more products as needed
-///;
+   // { id: UUID(), name: 'iphone', description: 'Description of Product 1', price: 1000 },
+ //  { id: UUID(), name: 'samsung', description: 'Description of Product 2', price: 950 },
+  // { id: UUID(), name: 'tv', description: 'Description of Product 3', price: 800 },
+  // { id: UUID(), name: 'laptop', description: 'Description of Product 4', price: 700 },
+   
+//];
 
 //let users = [];
-//let carts = [];
+let carts = [];
 
-const init = async() => {
-    await client.connect();
 
+const init = async()=> {
+  //const port = process.env.PORT || 3000;
+  await client.connect();
+  console.log('connected to database');
+  
     const SQL = `
     DROP TABLE IF EXISTS favorites;
     DROP TABLE IF EXISTS users;
@@ -44,16 +59,14 @@ const init = async() => {
     );
   `;
 
-    
+  await client.query(SQL)
 
-    await client.query(SQL);
-    console.log('data seeded');
-    const PORT = process.env.PORT || 3000;
+  console.log('data seeded')
+  const port = process.env.PORT || 8080
+  app.listen(port, () => console.log(`listening on port ${port}`))
+}
 
-    app.listen(PORT, () => {
-     console.log(`listening on port ${PORT}`)
-    })
-  }
+  
   
   init();
 
@@ -99,7 +112,7 @@ app.post('/api/login', (req, res) => {
 
 // Start the server
 //app.listen(PORT, () => {
-   // console.log(`Server is running on http://localhost:${PORT}`);
+   //console.log(`Server is running on http://localhost:${PORT}`);
 //});
 
 
@@ -116,7 +129,7 @@ const authenticateUser = (req, res, next) => {
 };
 
 // Routes
-app.get('/api/notes', async (req, res, next) => {
+app.get('/api/notes',isLoggedIn, async (req, res, next) => {
     try {
       const SQL = `
         SELECT * from notes;
@@ -128,17 +141,25 @@ app.get('/api/notes', async (req, res, next) => {
     }
   })
   //  // Mock database
-const users = [
-    { id: 1, email: 'john@example.com', password: 'password1', admin: false },
-    { id: 2, email: 'jane@example.com', password: 'password2', admin: true },
-    { id: 3, email: 'bob@example.com', password: 'password3', admin: true }
-  ];
+  const users = async() => {
+  await createTables();
+  console.log('tables created');
+
+  const [max, noel, john, joy, nathan, eden, mlan, bob, alice] = await Promise.all([
+    { id: 1,  username: 'max',email: 'max@example.com', password: 'password1', admin: false },
+    { id: 2, username: 'noel',email: 'noel@example.com', password: 'password2', admin: true },
+    { id: 3,username: 'john', email: 'john@example.com', password: 'password3', admin: true },
+    { id: 4,username: 'joy', email: 'john@example.com', password: 'password4', admin: true },
+    { id: 5,username: 'nathan', email: 'john@example.com', password: 'password5', admin: true }
+
+
+  ]);
   
   // Routes
   app.get('/users', async (req, res) => {
     try {
         const SQL = `
-          SELECT * from notes;
+          SELECT * from users;
         `
         const response = await client.query(SQL)
         res.send(response.rows)
@@ -151,7 +172,7 @@ const users = [
     const adminUsers = users.filter(user => user.admin);
     res.json(adminUsers);
   });
-  
+};
   app.get('/users/:email', (req, res) => {
     const userEmail = req.params.email;
     const user = users.find(user => user.email === userEmail);
@@ -163,9 +184,9 @@ const users = [
   });
   
   // Start the server
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-  });    //
+  //app.listen(PORT, () => {
+  //  console.log(`Server is running on http://localhost:${PORT}`);
+  //});    //
 
 // Add product to cart
 app.post('/api/cart/add', authenticateUser, (req, res) => {
