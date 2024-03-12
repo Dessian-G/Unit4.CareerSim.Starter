@@ -1,9 +1,11 @@
 const pg = require('pg');
-const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/acme_users_db');
+const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/acme_auth_users_db');
 //const uuid = require('uuid');
 const bcrypt = require('bcrypt');
+//app.use(bodyParser.json());
 
-const createTables = async()=> {
+
+ const createTables = async()=> {
   const SQL = `
     DROP TABLE IF EXISTS favorites;
     DROP TABLE IF EXISTS users;
@@ -132,7 +134,7 @@ module.exports = {
   createUser,
   createProduct,
   fetchUsers,
-  fetchProducts,
+  //fetchProducts,
   fetchFavorites,
   createFavorite,
   destroyFavorite,
