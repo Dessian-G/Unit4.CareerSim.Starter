@@ -1,14 +1,29 @@
+const {
+  
+  client,
+  createTables,
+  createUser,
+  createProduct,
+  fetchUsers,
+  fetchCart_products,
+  createCart_products,
+  destroyCart_products,
+  authenticate,
+  findUserByToken
+} = require('./db');
+
 const express = require('express');
 const app = express();
-//const UUID = require('uuid');
+app.use(express.json());
 const path = require('path');
 const pg = require('pg');
 const bodyParser = require('body-parser');
+app.get('/', (req, res)=> res.sendFile(path.join(__dirname, '../client/dist/index.html')));
+app.use('/assets', express.static(path.join(__dirname, '../client/dist/assets'))); 
+
 //const Product = require('./ Product');
-
-
 //const jwt = require('jsonwebtoken');
-const {createTables, client} = require('./db.js')
+//const {createTables} = require('./db.js')
 
 const isLoggedIn = async(req, res, next)=> {
   try {
@@ -22,11 +37,12 @@ const isLoggedIn = async(req, res, next)=> {
 // Administrator routes
 // Add, edit, and remove products
 // View list of all products
+  
 // View list of all users
 
 // Dummy database to store products, users, and carts
 
-let products = [
+const products = [
   { id: 1, name: 'Dell laptop',description:'inspiron16.0,16gb' ,price: 950 ,qty:4,admin: false },
   { id: 2, name: 'iphone15',description:'black, oled display',price: 1200 ,qty: 6,admin: false },
   { id: 3, name: 'snaptain drone',description:'grey,remote controller' ,price: 1200 ,qty: 2,admin: true },
@@ -34,7 +50,7 @@ let products = [
   
 ];
 
-let users = [
+const users = [
   { id: 1,  name: 'max',email: 'max@example.com', password: 'password1', admin: false },
   { id: 2, name: 'noel',email: 'noel@example.com', password: 'password2', admin: true },
   { id: 3, name: 'john', email: 'john@example.com', password: 'password3', admin: true },
@@ -43,21 +59,13 @@ let users = [
 
 ];
 
-let cart_products = [
+const cart_products = [
   { id: 1, name:'max', productId: 1, quantity: 2 ,admin: false},
   { id: 2,name: 'noel', productId: 2, quantity: 1,admin: false },
   {id: 3, name: 'john' ,productId: 1, quantity: 2 ,admin: false},
   {id: 4,name: 'joy', productId: 2, quantity: 1,admin: true },
   // Add more items to the cart as needed
 ];
-
-
-
-
-
-  
-  
-  
 
 //View all available products
 app.get('/api/products',async (req, res) => {
@@ -73,7 +81,7 @@ app.get('/api/products',async (req, res) => {
 } 
   
 });
-app.get('/api/users',async (req, res) => {
+app.get('/api/users',async (req, res, next) => {
   try {
     
     // Send the users as a response
@@ -83,6 +91,21 @@ app.get('/api/users',async (req, res) => {
     res.status(500).json({ message: 'Product not found' });
 } 
   
+});
+
+app.post('/api/users', (req, res) => {
+  // Extract data from the request body
+  const { username, email } = req.body;
+
+  // Create a new user in the database
+  // This is a placeholder for actual database logic
+  const newUser = {
+      username: username,
+      email: email
+  };
+
+  // Send a success response back to the client
+  res.status(201).json({ message: 'User created successfully', user: newUser });
 });
 
 // View details for a specific product
@@ -95,7 +118,7 @@ app.get('/api/products/:id', (req, res, next) => {
         res.status(404).json({ message: 'Product not found' });
     }
 });
-app.get('/api/cart_products',async (req, res) => {
+app.get('/api/cart_products',async (req, res, next) => {
   try {
     
     // Send the users as a response
@@ -106,6 +129,43 @@ app.get('/api/cart_products',async (req, res) => {
 } 
   
 });
+
+app.post('/api/cart_products', (req, res) => {
+  // Extract product data from the request body
+  const { productId, quantity } = req.body;
+
+  // Add the product to the user's cart
+  cart_products.push({ productId, quantity });
+
+  // Send a success response back to the client
+  res.status(200).json({ message: 'Product added to cart successfully' })
+});
+
+
+app.put('/api/cart_products', (req, res) => {
+  const { userId, productId, quantity } = req.body;
+
+  // Find the user by userId
+  const user = users.find(user => user.id === userId);
+
+  if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+  }
+
+  // Find the product in the user's cart
+  const productIndex = user.cart.findIndex(item => item.productId === productId);
+
+  if (productIndex === -1) {
+      return res.status(404).json({ message: 'Product not found in cart' });
+  }
+
+  // Update the quantity of the product in the cart
+  user.cart[productIndex].quantity = quantity;
+
+  // Send a success response
+  res.json({ message: 'Product quantity updated successfully' });
+});
+
 // User registration
 app.post('/api/register', async (req, res) => {
   const { username, password, email } = req.body;
@@ -135,6 +195,14 @@ app.post('/api/login', async (req, res) => {
       res.json({ message: 'Login successful', token });
   } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
+  }
+});
+app.get('/api/auth/me', async(req, res, next)=> {
+  try {
+    res.send(await findUserWithToken(req.headers.authorization));
+  }
+  catch(ex){
+    next(ex);
   }
 });
 // Start the server
@@ -236,18 +304,18 @@ app.put('/api/cart/edit', authenticateUser, (req, res) => {
 // Checkout
  // Perform checkout process (e.g., update inventory, create order record, etc.)
     // Dummy implementation for demonstration purposes
-app.post('/api/cart/checkout', authenticateUser, (req, res) => {
-    const userCart = carts.filter(item => item.userId === req.user.id);
-   carts = carts.filter(item => item.userId !== req.user.id);
-    res.json({ message: 'Checkout successful', cart: userCart });
-});
+    app.post('/api/cart/checkout', authenticateUser, (req, res) => {
+      const userCart = carts.filter(item => item.userId === req.user.id);
+     carts = carts.filter(item => item.userId !== req.user.id);
+      res.json({ message: 'Checkout successful', cart: userCart });
+  });
 const init = async() => {
   await client.connect() 
   console.log('connected to database');
  await createTables();
  console.log('tables created');
 
- const [max, noel, john, joy, nathan, eden, mlan, bob, alice] = await Promise.all([
+ const [max, noel, john, joy, nathan, ] = await Promise.all([
    { id: 1,  username: 'max',email: 'max@example.com', password: 'password1', admin: false },
    { id: 2, username: 'noel',email: 'noel@example.com', password: 'password2', admin: true },
    { id: 3,username: 'john', email: 'john@example.com', password: 'password3', admin: true },
