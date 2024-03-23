@@ -43,10 +43,10 @@ const isLoggedIn = async(req, res, next)=> {
 // Dummy database to store products, users, and carts
 
 const products = [
-  { id: 1, name: 'Dell laptop',description:'inspiron16.0,16gb' ,price: 950 ,qty:4,admin: false },
-  { id: 2, name: 'iphone15',description:'black, oled display',price: 1200 ,qty: 6,admin: false },
-  { id: 3, name: 'snaptain drone',description:'grey,remote controller' ,price: 1200 ,qty: 2,admin: true },
-  { id: 4, name: 'sony alpha IV',description:'black camera with sel2870 lens' ,price: 2699 ,qty:4,admin: false }
+  { id: 1, name: 'Dell laptop',description:'inspiron16.0,16gb' ,price: 950 ,qty:4, imageUrl:'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/inspiron-notebooks/16-7640/media-gallery-ai-key/fpr/laptop-inspiron-16-plus-7640nt-bl-dis-fpr-ai-key-gallery-2.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=572&qlt=100,1&resMode=sharp2&size=572,402&chrss=full',admin: false },
+  { id: 2, name: 'iphone15',description:'black, oled display',price: 1200 ,qty: 6,  imageUrl:'https://www.att.com/scmsassets/global/devices/phones/apple/apple-iphone-15/carousel/black-1.png', admin: false },
+  { id: 3, name: 'snaptain drone',description:'grey,remote controller' ,price: 1200 ,qty: 2,  imageUrl:'https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6534/6534909cv11d.jpg;maxHeight=640;maxWidth=550',admin: true },
+  { id: 4, name: 'sony alpha IV',description:'black camera with sel2870 lens' ,price: 2699 ,qty:4, imageUrl:'https://m.media-amazon.com/images/I/71vpzW1nQJL.__AC_SY300_SX300_QL70_FMwebp_.jpg', admin: false }
   
 ];
 
@@ -62,8 +62,8 @@ const users = [
 const cart_products = [
   { id: 1, name:'max', productId: 1, quantity: 2 ,admin: false},
   { id: 2,name: 'noel', productId: 2, quantity: 1,admin: false },
-  {id: 3, name: 'john' ,productId: 1, quantity: 2 ,admin: false},
-  {id: 4,name: 'joy', productId: 2, quantity: 1,admin: true },
+  {id: 3, name: 'john' ,productId: 3, quantity: 2 ,admin: false},
+  {id: 4,name: 'joy', productId: 4, quantity: 1,admin: true },
   // Add more items to the cart as needed
 ];
 
