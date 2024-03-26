@@ -11,21 +11,28 @@ const bcrypt = require('bcrypt');
     DROP TABLE IF EXISTS users;
     DROP TABLE IF EXISTS products;
     CREATE TABLE users(
-      id UUID PRIMARY KEY,
+      id UUID DEFAULT gen_random_uuid(),
       username VARCHAR(20) UNIQUE NOT NULL,
+      Payment_info VARCHAR(16)
       password VARCHAR(255) NOT NULL,
-      email VARCHAR(50)
+      email VARCHAR(100) UNIQUE NOT NULL,
+      is_admin BOOLEAN DEFAULT FALSE,
+      PRIMARY KEY (id)
     );
     CREATE TABLE products(
-      id UUID PRIMARY KEY,
-      name VARCHAR(20)
+      id UUID DEFAULT gen_random_uuid(),
+      name VARCHAR(20) UNIQUE NOT NULL,
+      price INTEGER DEFAULT 0,
+      description VARCHAR(225)
+      PRIMARY KEY (id)
     );
     CREATE TABLE cart_products(
-      id UUID PRIMARY KEY,
+      id UUID DEFAULT gen_random_uuid()
       user_id UUID REFERENCES users(id) NOT NULL,
       product_id UUID REFERENCES products(id) NOT NULL,
-      qty INTEGER REFERENCES products(qty )NOT NULL,
+      qty INTEGER DEFAULT 0,
       CONSTRAINT unique_user_id_and_product_id UNIQUE (user_id, product_id)
+      PRIMARY KEY (id)
     );
   `;
   //await client.query(SQL);
@@ -52,8 +59,8 @@ const createCart_products = async({ user_id, product_id })=> {
   const SQL = `
     INSERT INTO cart_products(id, user_id, product_id) VALUES($1, $2, $3) RETURNING *
   `;
-  const response = await client.query(SQL, [uuid.v4(), user_id, product_id]);
-  return response.rows[0];
+  //const response = await client.query(SQL, [uuid.v4(), user_id, product_id]);
+  //return response.rows[0];
 };
 
 const destroyCart_products = async({ user_id, id })=> {

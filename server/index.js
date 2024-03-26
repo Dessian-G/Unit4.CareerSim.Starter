@@ -62,7 +62,7 @@ const users = [
 const cart_products = [
   { id: 1, name:'max', productId: 1, quantity: 2 ,admin: false},
   { id: 2,name: 'noel', productId: 2, quantity: 1,admin: false },
-  {id: 3, name: 'john' ,productId: 3, quantity: 2 ,admin: false},
+  {id: 3, name: 'john' ,productId: 3, quantity: 10 ,admin: false},
   {id: 4,name: 'joy', productId: 4, quantity: 1,admin: true },
   // Add more items to the cart as needed
 ];
@@ -102,6 +102,7 @@ app.post('/api/users', (req, res) => {
   const newUser = {
       username: username,
       email: email
+    
   };
 
   // Send a success response back to the client
@@ -118,7 +119,7 @@ app.get('/api/products/:id', (req, res, next) => {
         res.status(404).json({ message: 'Product not found' });
     }
 });
-app.get('/api/cart_products',async (req, res, next) => {
+app.get('/api/cart_products', async (req, res, next) => {
   try {
     
     // Send the users as a response
@@ -181,6 +182,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+
 // User login
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
@@ -197,6 +199,9 @@ app.post('/api/login', async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+
 app.get('/api/auth/me', async(req, res, next)=> {
   try {
     res.send(await findUserWithToken(req.headers.authorization));
@@ -304,11 +309,26 @@ app.put('/api/cart/edit', authenticateUser, (req, res) => {
 // Checkout
  // Perform checkout process (e.g., update inventory, create order record, etc.)
     // Dummy implementation for demonstration purposes
-    app.post('/api/cart/checkout', authenticateUser, (req, res) => {
+    app.post('/api/cart_products/checkout', authenticateUser, (req, res) => {
       const userCart = carts.filter(item => item.userId === req.user.id);
      carts = carts.filter(item => item.userId !== req.user.id);
       res.json({ message: 'Checkout successful', cart: userCart });
   });
+  app.put('api/cart_products/checkout', authenticateUser, (req, res) => {
+    // Implement your checkout logic here
+    // For example, you can process the items in the user's cart and mark them as purchased
+
+    // Dummy implementation for demonstration purposes
+    const cartItems = req.body.cartItems; // Assuming the request body contains the items in the cart
+    const totalPrice = calculateTotalPrice(cartItems); // Calculate the total price of the items in the cart
+
+    // Perform any additional logic (e.g., updating inventory, creating order record, etc.)
+
+    // Send a response indicating successful checkout
+    res.status(200).json({ message: 'Checkout successful', totalPrice: totalPrice });
+});
+
+
 const init = async() => {
   await client.connect() 
   console.log('connected to database');
