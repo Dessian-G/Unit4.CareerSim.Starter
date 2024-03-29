@@ -8,6 +8,7 @@ const {
   fetchCart_products,
   createCart_products,
   destroyCart_products,
+  fetchUserCartItems,
   authenticate,
   findUserByToken
 } = require('./db');
@@ -18,6 +19,8 @@ app.use(express.json());
 const path = require('path');
 const pg = require('pg');
 const bodyParser = require('body-parser');
+
+
 app.get('/', (req, res)=> res.sendFile(path.join(__dirname, '../client/dist/index.html')));
 app.use('/assets', express.static(path.join(__dirname, '../client/dist/assets'))); 
 
@@ -64,16 +67,13 @@ const cart_products = [
   { id: "2",name: 'noel', productId: 2, quantity: 1,admin: false },
   {id: "3", name: 'john' ,productId: 3, quantity: 10 ,admin: false},
   {id: "4",name: 'joy', productId: 4, quantity: 1,admin: true },
-  // Add more items to the cart as needed
+ 
 ];
 
-//View all available products
 app.get('/api/products',async (req, res) => {
   try {
-    // Retrieve all products from the database
-    //const products = await product.find();
-
-    // Send the products as a response
+    
+ // Send the products as a response
     res.json(products);
 } catch (error) {
     console.error('Error fetching products:', error);
@@ -83,8 +83,7 @@ app.get('/api/products',async (req, res) => {
 });
 app.get('/api/users',async (req, res, next) => {
   try {
-    
-    // Send the users as a response
+  
     res.json(users);
 } catch (error) {
     console.error('Error fetching users:', error);
@@ -97,19 +96,12 @@ app.post('/api/users', (req, res) => {
   // Extract data from the request body
   const { username, email } = req.body;
 
-  // Create a new user in the database
-  // This is a placeholder for actual database logic
   const newUser = {
       username: username,
       email: email
-    
-  };
-
-  // Send a success response back to the client
-  res.status(201).json({ message: 'User created successfully', user: newUser });
+     };
+res.status(201).json({ message: 'User created successfully', user: newUser });
 });
-
-// View details for a specific product
 app.get('/api/products/:id', (req, res, next) => {
     const { id } = req.params;
     console.log(id)
@@ -134,48 +126,36 @@ app.get('/api/cart_products', async (req, res, next) => {
 });
 
 app.post('/api/cart_products', (req, res) => {
-  // Extract product data from the request body
   const { productId, quantity } = req.body;
+cart_products.push({ productId, quantity });
 
-  // Add the product to the user's cart
-  cart_products.push({ productId, quantity });
-
-  // Send a success response back to the client
   res.status(200).json({ message: 'Product added to cart successfully' })
 });
 
 
 app.put('/api/cart_products', (req, res) => {
   const { userId, productId, quantity } = req.body;
-
-  // Find the user by userId
   const user = users.find(user => user.id === userId);
 
   if (!user) {
       return res.status(404).json({ message: 'User not found' });
   }
-
-  // Find the product in the user's cart
   const productIndex = user.cart.findIndex(item => item.productId === productId);
 
   if (productIndex === -1) {
       return res.status(404).json({ message: 'Product not found in cart' });
   }
-
-  // Update the quantity of the product in the cart
   user.cart[productIndex].quantity = quantity;
-
-  // Send a success response
   res.json({ message: 'Product quantity updated successfully' });
 });
 
 // User registration
 app.post('/api/register', async (req, res) => {
   const { username, password, email } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  //const hashedPassword = await bcrypt.hash(password, 10);
   const query = 'INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING *';
   try {
-      const result = await client.query(query, [username, hashedPassword, email]);
+      const result = await client.query(query, [username, email]);
       const user = result.rows[0];
       const token = jwt.sign({ user }, 'secret');
       res.json({ message: 'User registered successfully', token });
@@ -239,10 +219,8 @@ app.get('/api/products',isLoggedIn, async (req, res, next) => {
       next(ex)
     }
   })
-  //  // Mock database
  
-  
-  // Routes
+ 
   app.get('/users', async (req, res) => {
     try {
         const SQL = `
@@ -294,6 +272,7 @@ app.post('/api/cart/add', authenticateUser, (req, res) => {
 
 // Edit cart (change quantity or remove product)
 app.put('/api/cart/edit', authenticateUser, (req, res) => {
+
     const { productId, quantity } = req.body;
     const cartItem = carts.find(item => item.userId === req.user.id && item.productId === productId);
     if (!cartItem) {
@@ -309,24 +288,45 @@ app.put('/api/cart/edit', authenticateUser, (req, res) => {
 });
 
 // Checkout
- // Perform checkout process (e.g., update inventory, create order record, etc.)
-    // Dummy implementation for demonstration purposes
+app.post('/api/users/:id/checkout', async(rep, res, next) => {
+  try {
+    const {id} = req.params;
+    const order = await Checkout(id);
+    res.send(order);
+  } catch (ex) {
+    next(ex);
+  }
+});
+app.post('/api/checkout', async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    
+    // Retrieve the user's cart items from the database
+    const userCartItems = await fetchUserCartItems(userId);
+
+    // Process the items in the cart (e.g., mark them as purchased, update inventory, etc.)
+    await processCartItems(userCartItems);
+
+    await clearUserCart(userId);
+
+    res.status(200).json({ message: 'Checkout successful' });
+  } catch (error) {
+    console.error('Error during checkout:', error);
+    res.status(500).json({ message: 'An error occurred during checkout' });
+  }
+});
+
     app.post('/api/cart_products/checkout', authenticateUser, (req, res) => {
       const userCart = carts.filter(item => item.userId === req.user.id);
      carts = carts.filter(item => item.userId !== req.user.id);
       res.json({ message: 'Checkout successful', cart: userCart });
   });
   app.put('api/cart_products/checkout', authenticateUser, (req, res) => {
-    // Implement your checkout logic here
-    // For example, you can process the items in the user's cart and mark them as purchased
+    // 
 
-    // Dummy implementation for demonstration purposes
+   
     const cartItems = req.body.cartItems; // Assuming the request body contains the items in the cart
     const totalPrice = calculateTotalPrice(cartItems); // Calculate the total price of the items in the cart
-
-    // Perform any additional logic (e.g., updating inventory, creating order record, etc.)
-
-    // Send a response indicating successful checkout
     res.status(200).json({ message: 'Checkout successful', totalPrice: totalPrice });
 });
 
@@ -346,10 +346,7 @@ const init = async() => {
 
 
  ]);
- console.log(`max has an email of ${max.email}`);
- console.log(`noel has an id of ${noel.id}`);
- console.log(`joy has an password of ${john.password}`);
-
+ 
 }
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`listening on port ${port}`));
