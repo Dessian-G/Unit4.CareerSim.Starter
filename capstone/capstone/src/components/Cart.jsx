@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Cart_products = () => {
+const Cart = () => {
   const [userId, setUserId] = useState('');
   const [productId, setProductId] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -8,7 +8,7 @@ const Cart_products = () => {
 
   const handleUpdateCart = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/products", {
+      const response = await fetch('http://localhost:3000/api/products', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -59,4 +59,4 @@ const Cart_products = () => {
   );
 };
 
-export default Cart_products;
+export default Cart;

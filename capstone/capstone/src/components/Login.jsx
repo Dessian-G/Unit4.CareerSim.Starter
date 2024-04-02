@@ -9,7 +9,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       // Send login data to the server
-      const response = await fetch('/api/login', {
+      const response = await fetch("http://localhost:3000/api/products", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
