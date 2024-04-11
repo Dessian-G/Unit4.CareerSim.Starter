@@ -1,38 +1,37 @@
+//import React from "react";
 import React, { useState, useEffect } from "react";
 
-//import api from api
-
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+//import "./index.css";
+import Navbar from "./components/Navbar";
 import "./App.css";
-import Navigation from "./components/Navigation";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Footer from "./components/Footer";
+import Cart from "./components/Pages/Cart";
+import Shop from "./components/Pages/Shop";
+import ShopCategory from "./components/Pages/ShopCategory";
 import Products from "./components/Products";
-import Shop from "./components/Shop";
-import ProductId from "./components/ProductId";
-import SingleProduct from "./components/SingleProduct";
-import Cart_products from "./components/Cart_products";
-import Cart from "./components/Cart";
-
-//import ProductContext  from './Components/ProductContext';
+import LoginRegister from "./components/Pages/LoginRegister";
+import women_banner from "./assets/lady2_icon.jpg"
+import men_banner from "./assets/men_banner2.jpg"
 
 function App() {
   return (
     <div>
-      <BrowserRouter>
-        <Navigation />
+      <Router>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Shop />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/productId" element={<ProductId />} />
-
-          <Route path="/cart_products" element={<Cart_products />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Shop gender="products" />} />
+          <Route path="/mens" element={<ShopCategory banner={men_banner} category="men" />} />
+          <Route path="/womens" element={<ShopCategory banner={women_banner} category="women" />} />
+          
+          <Route path='/products' element={<Products gender="products"/>}>
+            <Route path=':productId' element={<Products />} />
+          </Route>
           <Route path="/cart" element={<Cart />} />
-          <Route path="/singleProduct" element={<SingleProduct />} />
+          <Route path="/login" element={<LoginRegister/>} />
         </Routes>
-      </BrowserRouter>
+        <Footer />
+      </Router>
     </div>
   );
 }

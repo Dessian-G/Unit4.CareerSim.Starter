@@ -40,3 +40,33 @@
 .read-the-docs {
   color: #888;
 }
+ /* products.css */
+
+.products-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.product {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.product h3 {
+  margin-top: 0;
+}
+
+.product p {
+  margin: 10px 0;
+}
+
+.product h3, .product p {
+  font-size: 1.2rem;
+}
+
+.product-price {
+  font-weight: bold;
+  color: #007bff; /* blue color */
+}

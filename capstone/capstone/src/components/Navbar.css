@@ -4,22 +4,23 @@
     padding: 16px;
     box-shadow: 0 1px 3px -2px  black;
     
-
-}
-.nav-logo{
+  
+  }
+  .nav-logo{
     display: flex;
     align-items: center;
     gap: 10px;
    
    
-
-} 
-.nav-logo p{
+  
+  } 
+  .nav-logo p{
     color: blueviolet;
     font-size: 38px;
     font-weight: 600;
-}
-.nav-menu{
+  }  
+ 
+  .nav-menu{
     display: flex;
     align-items: center;
     list-style: none;
@@ -27,44 +28,51 @@
     color: aqua;
     font-size: 20px;
     font-style: 500;
-
+  
+  }
+  .nav-menu hr{
+    border: none;
+    width: 80%;
+    height: 3px;
+    border-radius: 10px;
+    background: #FF4141;
 }
-.nav-menu li{
+  .nav-menu li{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 6px;
     cursor: pointer;
-
-}
-.nav-login-cart {
+  
+  }
+  .nav-login-cart {
     display: flex;
     align-items: center;
     gap: 45px;
-    gap: -20px
-
-}
-.nav-login-cart button{
-    width: 158px;
+   
+  
+  }
+  .nav-login-cart button{
+    width: 90px;
     height: 58px;
     outline: none;
     border: 1px solid rgb(112, 151, 112);
-    border-radius: 80px;
-    color: burlywood;
+    border-radius: 75px;
+    color: rgb(16, 136, 78);
     font-size: 20px;
-    font-weight: 500px;
+    font-weight: 500;
     background: white;
     cursor: pointer;
-
-
-}
-.nav-login-cart button:active{
-    background: rgb(223, 212, 212);
-
-}
-
-.nav-cart-count{
+  
+  
+  }
+  .nav-login-cart button:active{
+    background: rgb(217, 115, 115);
+  
+  }
+  
+  .nav-cart-count{
     width: 22px;
     height: 22px;
     display: flex;
@@ -76,12 +84,13 @@
     font-size: 14px;
     background: red;
     color: white;
-
-}
-.div{
+  
+  }
+  .div{
     body {
-        background-color: #f0f0f0; 
+        background-color: #68b75c; 
         margin: 0;
         padding: 0; 
       }
-}
+
+    }
