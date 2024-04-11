@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react';
-//import {Link} from 'react-router-dom'
 import "./Products.css";
-//import { CartContext } from '../CartContext';
-//import Products from './Pages/Shop';
-
+//import { ShopContext } from "../ShopContext"
 
 const Products = () => {
     const [products, setProducts] = useState([]);
-    //const { addToCart } = useContext(CartContext);'
-    //const { id, name, description, price, image } = products;
-
 
     //const {product} = props;
-    
-    
-    //const {addToCart} = useContext(CartContextContext);
+    //const {addToCart} = useContext(ShopContext);
 
 
     useEffect(() => {
         fetchProducts();
     }, []);
-    //const {addToCart} = useContext(CartContext);
+    //const {addToCart} = useContext(ShopContext);
     const fetchProducts = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/products');
@@ -39,17 +31,15 @@ const Products = () => {
     return (
         <div className="product-page">
             <h2> All Products</h2>
-          
+            <h2>Update Cart</h2>
             <ul>
                 {products.map(product => (
                     <div key={product.id} className="product">
                         <h3>{product.name}</h3>
-                    s          <p>Description: {product.description}</p>
+                        <p>Description: {product.description}</p>
                         <p>Price: ${product.price}</p>
                         <img src={product.image}></img>
-                      <div> <button onClick={() => addToCart(product, id)}></button></div>
-                        
-                        
+                        <button onClick={() => { addToCart(product.id) }}>ADD TO CART</button>
                     </div>
                 ))}
             </ul>
