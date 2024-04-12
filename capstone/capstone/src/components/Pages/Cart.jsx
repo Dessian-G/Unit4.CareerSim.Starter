@@ -1,20 +1,28 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import "../Pages/Cart.css"
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
 
-  // Function to add an item to the cart
-  const addToCart = (productId) => {
-    // Find the product in the products array
-    const products = products.find((product) => product.id === productId);
+  // Fetch cart products from the API
+  useEffect(() => {
+    const fetchCartProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/cart_products');
+        if (!response.ok) {
+          throw new Error('Error fetching cart products');
+        }
+        const data = await response.json();
+        setCartItems(data);
+      } catch (error) {
+        console.error('Error fetching cart products:', error);
+      }
+    };
 
-    // Add the product to the cartItems array
-    setCartItems([...cartItems, productId]);
-  };
+    fetchCartProducts();
+  }, []);
 
   // Function to remove an item from the cart
   const removeFromCart = (productId) => {
-
     const updatedCart = cartItems.filter((item) => item.id !== productId);
     setCartItems(updatedCart);
   };
