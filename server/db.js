@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 const createTables = async () => {
   const SQL = `
     DROP TABLE IF EXISTS cart_products;
-    DROP TABLE IF EXISTS favorites;
+    
     DROP TABLE IF EXISTS products;
     DROP TABLE IF EXISTS users;
     CREATE TABLE users(
@@ -64,10 +64,40 @@ const createProduct = async ({ name }) => {
 
 const createCart_products = async ({ user_id, product_id }) => {
   const SQL = `
-    INSERT INTO cart_products(id, user_id, product_id) VALUES($1, $2, $3) RETURNING *
+    INSERT INTO  VALUES($1, $2, $3) RETURNING *
   `;
   const response = await client.query(SQL, [uuid.v4(), user_id, product_id]);
   return response.rows[0];
+};
+const updateProducts = async ( name, price, category,description,id,title) => {
+  const SQL = `
+    UPDATE products
+     SET  nane=$1, price=$2 description=$3, title=$4) 
+     WHERE id=$5
+      RETURNING *
+  `;
+  const result =await client.query(SQL,[name, price, category,description,id,title])
+  console.log(result)
+  return result.rows[0]
+};
+
+const updateCart_products = async ( user_id, product_id ,qty) => {
+  const SQL = `
+    UPDATE cart_products
+     SET  user_id =$1, product_id=$2 qty=$3) 
+     WHERE id=$4
+      RETURNING *
+  `;
+  const result = await client.query(SQL, [user_id, product_id,qty]);
+  console.log(result)
+  return response.rows[0];
+};
+const addCartProduct = async ({ order_id, book_id, qty }) => {
+  const SQL = `
+      INSERT INTO cart_products(id, order_id, product_id, qty) VALUES($1, $2, $3, $4) RETURNING *
+    `;
+  const result = await client.query(SQL, [uuid.v4(), order_id, product_id, qty]);
+  return result.rows[0];
 };
 
 const destroyCart_products = async ({ user_id, id }) => {
@@ -75,6 +105,7 @@ const destroyCart_products = async ({ user_id, id }) => {
     DELETE FROM cart_products WHERE user_id=$1 AND id=$2
   `;
   await client.query(SQL, [user_id, id]);
+  return response.rows[0];
 };
 
 const authenticate = async ({ username, password }) => {
@@ -120,6 +151,12 @@ const findUserByToken = async (token) => {
 
   return { token: token };
 };
+const deleteUser = async(username) => {
+const SQL = `
+DELETE * FROM users WHERE username=$1
+` 
+await client.query(SQL, [username])
+};
 
 const fetchUsers = async () => {
   const SQL = `
@@ -149,10 +186,14 @@ module.exports = {
   client,
   createTables,
   createUser,
+  
   createProduct,
+  updateProducts,
   fetchUsers,
   fetchProducts,
+  addCartProduct,
   fetchCart_products,
+  updateCart_products,
   createCart_products,
   destroyCart_products,
   authenticate,

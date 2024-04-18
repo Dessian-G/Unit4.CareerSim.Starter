@@ -13,7 +13,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('https://fakestoreapi.com/products');
+      const response = await fetch('http://localhost:3000/api/products');
       if (!response.ok) {
         throw new Error('Error fetching products');
       }
@@ -28,8 +28,9 @@ const Products = () => {
 
   return (
     <div className="product-page">
-      <h2> All Products</h2>
-      <ul>
+      <h2> DesShop</h2>
+     
+     
         {products.map(product => (
            <div key={product.id} className="product">
             <h3>{product.name}</h3>
@@ -39,7 +40,8 @@ const Products = () => {
             <button>Add to cart</button>
           </div>
         ))}
-      </ul>
+     
+     
     </div>
   );
 };

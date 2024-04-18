@@ -70,3 +70,6 @@
   font-weight: bold;
   color: #007bff; /* blue color */
 }
+.background-red {
+  background-color: red;
+}

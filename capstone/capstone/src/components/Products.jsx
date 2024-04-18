@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import "./Products.css";
 //import { ShopContext } from "../ShopContext"
 
-const Products = () => {
+   export const Products = () => {
     const [products, setProducts] = useState([]);
+    
+    
+
 
     //const {product} = props;
     //const {addToCart} = useContext(ShopContext);
@@ -31,7 +34,10 @@ const Products = () => {
     return (
         <div className="product-page">
             <h2> All Products</h2>
-            <h2>Update Cart</h2>
+            <div class="product-search">
+  <input type="search" id="search" placeholder="Search products..."/>
+  <button type="submit">Search</button>
+</div>
             <ul>
                 {products.map(product => (
                     <div key={product.id} className="product">
@@ -39,8 +45,12 @@ const Products = () => {
                         <p>Description: {product.description}</p>
                         <p>Price: ${product.price}</p>
                         <img src={product.image}></img>
+                        
+                        
                         <button onClick={() => { addToCart(product.id) }}>ADD TO CART</button>
+                        
                     </div>
+                    
                 ))}
             </ul>
         </div>

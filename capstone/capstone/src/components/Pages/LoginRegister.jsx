@@ -54,19 +54,20 @@ const LoginRegister = () => {
       {
         alert(dataObj.errors)
       }
-  }
+  };
+  
 
   return (
     <div className="loginregister">
       <div className="loginregister-container">
         <h1>{state}</h1>
         <div className="loginregister-fields">
-          {state==="Register"?<input type="text" placeholder="Your name" name="username" value={formData.username} onChange={changeHandler}/>:<></>}
+          {state==="Register"?<input type="text" placeholder="Your name" name="username" value={formData.username} onChange={changeHandler}/>:<><input type="text" placeholder="Your name" name="username" value={formData.username} onChange={changeHandler}/></>}
           <input type="email" placeholder="Email address" name="email" value={formData.email} onChange={changeHandler}/>
           <input type="password" placeholder="Password" name="password" value={formData.password} onChange={changeHandler}/>
         </div>
 
-        <button onClick={()=>{state==="Login"?login():Register()}}>Continue</button>
+        <button onClick={() => state === "Login" ? login() : Register()}>Continue</button>
 
         {state==="Login"?
         <p className="loginregister-login">Create an account? <span onClick={()=>{setState("Register")}}>Click here</span></p>
