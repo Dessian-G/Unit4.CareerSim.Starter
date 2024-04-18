@@ -35,8 +35,7 @@ import "./Products.css";
         <div className="product-page">
             <h2> All Products</h2>
             <div class="product-search">
-  <input type="search" id="search" placeholder="Search products..."/>
-  <button type="submit">Search</button>
+  
 </div>
             <ul>
                 {products.map(product => (

@@ -31,6 +31,10 @@ const LoginRegister = () => {
       {
         alert(dataObj.errors)
       }
+
+      {
+        navigate("/shop")
+        }
   }
 
   const Register = async () => {
