@@ -5,3 +5,4 @@ https://github.com/public-apis/public-apis?tab=readme-ov-file#food--drink
 
 https://apilayer.com/
 
+https://zerotomastery.io/resources/
