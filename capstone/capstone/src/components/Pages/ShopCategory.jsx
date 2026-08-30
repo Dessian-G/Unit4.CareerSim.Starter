@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import "./ShopCategory.css";
 import { Link } from "react-router-dom";
 import Item from "../Item";
@@ -57,6 +58,11 @@ const ShopCategory = (props) => {
       </div>
     </div>
   );
+};
+
+ShopCategory.propTypes = {
+  banner: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
 };
 
 export default ShopCategory;

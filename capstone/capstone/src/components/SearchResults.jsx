@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const SearchResults = () => {
@@ -29,7 +29,7 @@ const SearchResults = () => {
     return (
         
         <div>
-            <h2>Search Results for "{searchTerm}"</h2>
+            <h2>Search Results for &quot;{searchTerm}&quot;</h2>
             {searchResults.length > 0 ? (
                 <ul>
                     {searchResults.map((product) => (
@@ -42,7 +42,7 @@ const SearchResults = () => {
                     ))}
                 </ul>
             ) : (
-                <p>No results found for "{searchTerm}"</p>
+                <p>No results found for &quot;{searchTerm}&quot;</p>
             )}
         </div>
     );
