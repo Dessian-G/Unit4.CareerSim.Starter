@@ -1,8 +1,5 @@
-//import React from "react";
-import React, { useState, useEffect, Component } from "react";
-
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-//import "./index.css";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import Footer from "./components/Footer";
@@ -14,20 +11,8 @@ import LoginRegister from "./components/Pages/LoginRegister";
 import women_banner from "./assets/lady2_icon.jpg"
 import men_banner from "./assets/men_banner2.jpg"
 import SearchResults from './components/SearchResults';
-//import Filter from '../navbar';
-
-//import SearchBar from "./components/Pages/SearchBar";
-//import singleProduct from "./components/SingleProduct"
-
-
-
 
 function App() {
-  //const handleFilter = (value) => {
-    // Handle filtering logic here
-    //console.log('Filter value:', value);
-  
-
   return (
     <div>
        

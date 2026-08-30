@@ -1,65 +1,54 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css";
 
 const LoginRegister = () => {
 
   const [state,setState] = useState("Login");
   const [formData,setFormData] = useState({username:"",email:"",password:""});
+  const navigate = useNavigate();
 
   const changeHandler = (e) => {
     setFormData({...formData,[e.target.name]:e.target.value});
     }
 
   const login = async () => {
-    let dataObj;
-    await fetch('http://localhost:3000/api/login', {
-      method: 'POST',
-      headers: {
-        Accept:'application/form-data',
-        'Content-Type':'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((resp) => resp.json())
-      .then((data) => {dataObj=data});
-      console.log(dataObj);
-      if (dataObj.success) {
-        localStorage.setItem('auth-token',dataObj.token);
-        window.location.replace("/products");
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || "Login failed");
+        return;
       }
-      else
-      {
-        alert(dataObj.errors)
-      }
-
-      {
-        navigate("/shop")
-        }
+      localStorage.setItem('auth-token', data.token);
+      navigate("/products");
+    } catch (error) {
+      console.error('Error logging in:', error);
+    }
   }
 
   const Register = async () => {
-    let dataObj;
-    await fetch('http://localhost:3000/api/register', {
-      method: 'POST',
-      headers: {
-        Accept:'application/form-data',
-        'Content-Type':'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((resp) => resp.json())
-      .then((data) => {dataObj=data});
-
-      if (dataObj.success) {
-        localStorage.setItem('auth-token',dataObj.token);
-        window.location.replace("/");
+    try {
+      const response = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || "Registration failed");
+        return;
       }
-      else
-      {
-        alert(dataObj.errors)
-      }
+      setState("Login");
+    } catch (error) {
+      console.error('Error registering:', error);
+    }
   };
-  
+
 
   return (
     <div className="loginregister">

@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import "./Products.css";
-//import { ShopContext } from "../ShopContext"
 
-   export const Products = () => {
+export const Products = () => {
     const [products, setProducts] = useState([]);
-    
-    
-
-
-    //const {product} = props;
-    //const {addToCart} = useContext(ShopContext);
-
 
     useEffect(() => {
         fetchProducts();
     }, []);
-    //const {addToCart} = useContext(ShopContext);
+
     const fetchProducts = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/products');
@@ -23,20 +15,38 @@ import "./Products.css";
                 throw new Error('Error fetching products');
             }
             const data = await response.json();
-            console.log(data)
             setProducts(data);
-
         } catch (error) {
             console.error('Error fetching products:', error);
+        }
+    };
+
+    const addToCart = async (productId) => {
+        const token = localStorage.getItem('auth-token');
+        if (!token) {
+            alert('Please log in to add items to your cart.');
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:3000/api/cart_products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: token,
+                },
+                body: JSON.stringify({ productId }),
+            });
+            if (!response.ok) {
+                throw new Error('Error adding product to cart');
+            }
+        } catch (error) {
+            console.error('Error adding product to cart:', error);
         }
     };
 
     return (
         <div className="product-page">
             <h2> All Products</h2>
-            <div class="product-search">
-  
-</div>
             <ul>
                 {products.map(product => (
                     <div key={product.id} className="product">
@@ -44,12 +54,8 @@ import "./Products.css";
                         <p>Description: {product.description}</p>
                         <p>Price: ${product.price}</p>
                         <img src={product.image}></img>
-                        
-                        
-                        <button onClick={() => { addToCart(product.id) }}>ADD TO CART</button>
-                        
+                        <button onClick={() => addToCart(product.id)}>ADD TO CART</button>
                     </div>
-                    
                 ))}
             </ul>
         </div>
@@ -57,5 +63,3 @@ import "./Products.css";
 };
 
 export default Products;
-
-
