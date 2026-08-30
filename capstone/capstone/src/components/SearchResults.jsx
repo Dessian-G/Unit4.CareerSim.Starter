@@ -15,7 +15,7 @@ const SearchResults = () => {
 
     const fetchProductsBySearchTerm = async (term) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/products?search=${term}`);
+            const response = await fetch(`/api/products?search=${term}`);
             if (!response.ok) {
                 throw new Error('Error fetching search results');
             }

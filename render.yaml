@@ -1,0 +1,22 @@
+databases:
+  - name: careersim-db
+    plan: free
+    databaseName: careersim
+    user: careersim
+
+services:
+  - type: web
+    name: careersim
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm install --prefix capstone/capstone && npm run build --prefix capstone/capstone
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: careersim-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production

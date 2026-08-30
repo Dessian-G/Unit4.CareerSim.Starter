@@ -1,7 +1,9 @@
 const pg = require("pg");
-const client = new pg.Client(
-  process.env.DATABASE_URL || "postgres://localhost/acme_auth_users_db"
-);
+const client = new pg.Client({
+  connectionString:
+    process.env.DATABASE_URL || "postgres://localhost/acme_auth_users_db",
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+});
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

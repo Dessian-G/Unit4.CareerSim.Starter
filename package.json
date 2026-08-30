@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "main": "server/index.js",
+    "engines": {
+        "node": ">=18"
+    },
     "scripts": {
         "start": "node server",
         "start:dev": "NODE_ENV=development nodemon server/index.js"

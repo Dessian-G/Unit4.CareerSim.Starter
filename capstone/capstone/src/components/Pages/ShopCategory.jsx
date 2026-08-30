@@ -16,7 +16,7 @@ const ShopCategory = (props) => {
   useEffect(() => {
     const fetchInfo = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch('/api/products');
         if (!response.ok) {
           throw new Error('Error fetching products');
         }
