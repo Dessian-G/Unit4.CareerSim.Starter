@@ -4,6 +4,12 @@ import "./ShopCategory.css";
 import { Link } from "react-router-dom";
 import Item from "../Item";
 
+const CATEGORY_LINKS = [
+  { path: "/mens", label: "Men", value: "men's clothing" },
+  { path: "/womens", label: "Women", value: "women's clothing" },
+  { path: "/electronics", label: "Electronics", value: "electronics" },
+];
+
 const ShopCategory = (props) => {
   const [products, setProducts] = useState([]);
 
@@ -24,35 +30,36 @@ const ShopCategory = (props) => {
     fetchInfo();
   }, []);
 
+  const categoryProducts = products.filter((item) => item.category === props.category);
+
   return (
     <div className="shopcategory">
       <img src={props.banner} className="shopcategory-banner" alt="" />
       <div className="shopcategory-indexSort">
         <p>
-          <span>Showing 1 - 6</span> out of 15 Products
+          Showing <span>{categoryProducts.length}</span> product{categoryProducts.length === 1 ? "" : "s"}
         </p>
       </div>
       <div className="shopcategory-products product-grid">
-        {products.map((item) => {
-          if (props.category === item.category) {
-            return (
-              <Item
-                id={item.id}
-                key={item.id}
-                name={item.name}
-                image={item.image}
-                price={item.price}
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
+        {categoryProducts.map((item) => (
+          <Item
+            id={item.id}
+            key={item.id}
+            name={item.name}
+            image={item.image}
+            price={item.price}
+          />
+        ))}
       </div>
       <div className="shopcategory-loadmore">
-        <Link to="/" style={{ textDecoration: "none" }}>
-          Explore More
-        </Link>
+        <p>Explore more</p>
+        <div className="shopcategory-loadmore-links">
+          {CATEGORY_LINKS.filter((c) => c.value !== props.category).map((c) => (
+            <Link key={c.path} to={c.path}>
+              {c.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

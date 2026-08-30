@@ -9,20 +9,22 @@ import Products from "./components/Products";
 import LoginRegister from "./components/Pages/LoginRegister";
 import women_banner from "./assets/lady2_icon.jpg"
 import men_banner from "./assets/men_banner2.jpg"
+import electronics_banner from "./assets/maro.jpg"
 import SearchResults from './components/SearchResults';
 
 function App() {
   return (
     <div>
-       
+
       <Router>
-      
+
         <Navbar />
         <Routes>
-          <Route path="/" element={<Shop gender="products" />} />
-          <Route path="/mens" element={<ShopCategory banner={men_banner} category="men" />} />
-          <Route path="/womens" element={<ShopCategory banner={women_banner} category="women" />} />
-          
+          <Route path="/" element={<Shop />} />
+          <Route path="/mens" element={<ShopCategory banner={men_banner} category="men's clothing" />} />
+          <Route path="/womens" element={<ShopCategory banner={women_banner} category="women's clothing" />} />
+          <Route path="/electronics" element={<ShopCategory banner={electronics_banner} category="electronics" />} />
+
           <Route path='/products' element={<Products gender="products"/>}>
             <Route path=':productId' element={<Products />} />
           </Route>

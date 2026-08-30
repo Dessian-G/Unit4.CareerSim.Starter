@@ -24,16 +24,28 @@
 }
 .shopcategory-loadmore{
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    margin: 100px auto;
-    width: 200px;
-    height: 60px;
-    border-radius: 75px;
-    background: #ededed;
+    gap: 12px;
+    margin: 80px auto;
     color: #787878;
     font-size: 16px;
     font-weight: 500;
+}
+.shopcategory-loadmore-links{
+    display: flex;
+    gap: 16px;
+}
+.shopcategory-loadmore-links a{
+    padding: 10px 24px;
+    border-radius: 75px;
+    background: #ededed;
+    color: var(--color-text);
+    font-weight: 500;
+}
+.shopcategory-loadmore-links a:hover{
+    background: var(--color-primary);
+    color: #fff;
 }
 @media (max-width:1280px) {
     .shopcategory-banner{

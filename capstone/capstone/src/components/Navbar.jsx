@@ -30,6 +30,7 @@ const Navbar = () => {
                     <li onClick={() => { setMenu("shop") }}><Link to='/products' style={{ textDecoration: 'none' }}>Products</Link>{menu === "products" ? <hr /> : <></>}</li>
                     <li onClick={() => { setMenu("mens") }}><Link to='/mens' style={{ textDecoration: 'none' }}>Men</Link>{menu === "mens" ? <hr /> : <></>}</li>
                     <li onClick={() => { setMenu("womens") }}><Link to='/womens' style={{ textDecoration: 'none' }}>Women</Link>{menu === "womens" ? <hr /> : <></>}</li>
+                    <li onClick={() => { setMenu("electronics") }}><Link to='/electronics' style={{ textDecoration: 'none' }}>Electronics</Link>{menu === "electronics" ? <hr /> : <></>}</li>
                 </ul>
                 <div className="nav-search">
                     <form onSubmit={handleSubmit}>
