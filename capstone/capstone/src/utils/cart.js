@@ -16,6 +16,11 @@ export const addToCart = async (productId) => {
       body: JSON.stringify({ productId }),
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('auth-token');
+        alert('Your session has expired. Please log in again.');
+        return false;
+      }
       const data = await response.json().catch(() => ({}));
       alert(data.message || 'Could not add product to cart');
       return false;
@@ -37,6 +42,9 @@ export const fetchCartProducts = async () => {
       headers: { Authorization: token },
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('auth-token');
+      }
       throw new Error('Error fetching cart products');
     }
     return await response.json();

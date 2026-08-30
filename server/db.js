@@ -132,7 +132,7 @@ const authenticate = async ({ username, password }) => {
   const token = jwt.sign(
     { id: response.rows[0].id, username: response.rows[0].username },
     JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "7d" }
   );
   return { token };
 };
