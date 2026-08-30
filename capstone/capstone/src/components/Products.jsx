@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import "./Products.css";
+import { addToCart } from '../utils/cart';
 
 export const Products = () => {
     const [products, setProducts] = useState([]);
@@ -18,29 +19,6 @@ export const Products = () => {
             setProducts(data);
         } catch (error) {
             console.error('Error fetching products:', error);
-        }
-    };
-
-    const addToCart = async (productId) => {
-        const token = localStorage.getItem('auth-token');
-        if (!token) {
-            alert('Please log in to add items to your cart.');
-            return;
-        }
-        try {
-            const response = await fetch('http://localhost:3000/api/cart_products', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: token,
-                },
-                body: JSON.stringify({ productId }),
-            });
-            if (!response.ok) {
-                throw new Error('Error adding product to cart');
-            }
-        } catch (error) {
-            console.error('Error adding product to cart:', error);
         }
     };
 

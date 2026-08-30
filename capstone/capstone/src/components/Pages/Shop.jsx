@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Shop.css";
-
-
-
+import { addToCart } from "../../utils/cart";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -37,7 +35,7 @@ const Products = () => {
             <p>Description: {product.description}</p>
             <p>Price: ${product.price}</p>
             <img src= {product.image}></img>
-            <button>Add to cart</button>
+            <button onClick={() => addToCart(product.id)}>Add to cart</button>
           </div>
         ))}
      

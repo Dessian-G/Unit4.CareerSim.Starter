@@ -1,44 +1,38 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import "../Pages/Cart.css";
+import { fetchCartProducts, removeFromCart } from "../../utils/cart";
 
 const Cart = () => {
   const [cartProducts, setCartProducts] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch cart products from the API
   useEffect(() => {
-    const fetchCartProducts = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/cart_products');
-        if (!response.ok) {
-          throw new Error('Error fetching cart products');
-        }
-        const data = await response.json();
+    if (!localStorage.getItem('auth-token')) {
+      navigate('/login');
+      return;
+    }
+    fetchCartProducts().then((data) => {
+      if (data) {
         setCartProducts(data);
-      } catch (error) {
-        console.error('Error fetching cart products:', error);
       }
-    };
+    });
+  }, [navigate]);
 
-    fetchCartProducts();
-  }, []);
-
-  // Function to remove a product from the cart
-  const removeFromCart = (productId) => {
-    const updatedCart = cartProducts.filter((product) => product.id !== productId);
-    setCartProducts(updatedCart);
+  const handleRemove = async (cartItemId) => {
+    const removed = await removeFromCart(cartItemId);
+    if (removed) {
+      setCartProducts((prev) => prev.filter((product) => product.id !== cartItemId));
+    }
   };
 
-  // Function to calculate the total cart amount
   const getTotalCartAmount = () => {
-    return cartProducts.reduce((total, product) => total + product.price, 0).toFixed(2);
+    return cartProducts
+      .reduce((total, product) => total + product.price * product.qty, 0)
+      .toFixed(2);
   };
 
-  // Function to handle checkout
   const checkout = () => {
-    // Implement your checkout logic here
-    // For now, let's just navigate to the checkout page
     navigate("/checkout");
   };
 
@@ -51,12 +45,13 @@ const Cart = () => {
             <h3>{product.name}</h3>
             <p>Description: {product.description}</p>
             <p>Price: ${product.price}</p>
+            <p>Quantity: {product.qty}</p>
             <img src={product.image} alt={product.name} />
-            <button onClick={() => removeFromCart(product.id)}>Remove from Cart</button>
+            <button onClick={() => handleRemove(product.id)}>Remove from Cart</button>
             <button onClick={() => navigate("/")}> Continue Shopping </button>
           </li>
         ))}
-        
+
       </ul>
 
       <div className="cartitems-down">
@@ -80,12 +75,11 @@ const Cart = () => {
           </div>
           <button onClick={checkout}>Proceed to Checkout</button>
         </div>
-        
-        
+
+
       </div>
     </div>
   );
 };
 
 export default Cart;
-
