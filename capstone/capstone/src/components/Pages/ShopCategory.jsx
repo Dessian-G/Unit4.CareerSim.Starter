@@ -32,7 +32,7 @@ const ShopCategory = (props) => {
           <span>Showing 1 - 6</span> out of 15 Products
         </p>
       </div>
-      <div className="shopcategory-products">
+      <div className="shopcategory-products product-grid">
         {products.map((item) => {
           if (props.category === item.category) {
             return (
@@ -42,8 +42,6 @@ const ShopCategory = (props) => {
                 name={item.name}
                 image={item.image}
                 price={item.price}
-                
-                
               />
             );
           } else {

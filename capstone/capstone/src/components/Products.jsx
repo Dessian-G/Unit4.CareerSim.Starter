@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import "./Products.css";
-import { addToCart } from '../utils/cart';
+import Item from './Item';
 
 export const Products = () => {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchProducts();
@@ -19,23 +20,31 @@ export const Products = () => {
             setProducts(data);
         } catch (error) {
             console.error('Error fetching products:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="product-page">
-            <h2> All Products</h2>
-            <ul>
-                {products.map(product => (
-                    <div key={product.id} className="product">
-                        <h3>{product.name}</h3>
-                        <p>Description: {product.description}</p>
-                        <p>Price: ${product.price}</p>
-                        <img src={product.image}></img>
-                        <button onClick={() => addToCart(product.id)}>ADD TO CART</button>
-                    </div>
-                ))}
-            </ul>
+        <div className="products-page">
+            <h2>All Products</h2>
+            {loading ? (
+                <p className="products-status">Loading products…</p>
+            ) : products.length === 0 ? (
+                <p className="products-status">No products available yet.</p>
+            ) : (
+                <div className="product-grid">
+                    {products.map(product => (
+                        <Item
+                            key={product.id}
+                            id={product.id}
+                            name={product.name}
+                            image={product.image}
+                            price={product.price}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

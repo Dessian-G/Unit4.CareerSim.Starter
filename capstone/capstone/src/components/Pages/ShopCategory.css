@@ -20,12 +20,7 @@
 .shopcategory-products{
     width: 90%;
     max-width: 1360px;
-    justify-content: center;
     margin: 20px auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    
 }
 .shopcategory-loadmore{
     display: flex;

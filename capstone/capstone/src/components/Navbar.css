@@ -1,10 +1,10 @@
 .navbar{
     display: flex;
     justify-content: space-around;
+    align-items: center;
     padding: 16px;
+    background: var(--color-surface);
     box-shadow: 0 1px 3px -2px  black;
-    
-  
   }
   .nav-logo{
     display: flex;
@@ -86,15 +86,7 @@
     color: white;
   
   }
-  .div{
-    body {
-        background-color: #68b75c; 
-        margin: 0;
-        padding: 0; 
-      }
-
-    }
-    nav-search {
+    .nav-search {
       margin-left: auto; /* Align the search bar to the right */
     }
     
