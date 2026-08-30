@@ -1,8 +1,10 @@
-https://662169e0b035280aec4b884e--beautiful-starship-333f4a.netlify.app/cart
+# capstone
 
+React + Vite storefront for DesShop. Talks to the Express API in [`../../server`](../../server), expected at `http://localhost:3000`.
 
-https://github.com/public-apis/public-apis?tab=readme-ov-file#food--drink
+## Scripts
 
-https://apilayer.com/
-
-https://zerotomastery.io/resources/
+- `npm run dev` — start the Vite dev server
+- `npm run build` — production build (output consumed by `server/index.js`)
+- `npm run lint` — run ESLint
+- `npm run preview` — preview the production build locally
